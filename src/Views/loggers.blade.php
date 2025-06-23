@@ -69,32 +69,27 @@
             </thead>
             <tbody>
             @forelse ($loggers as $logger)
-                <tr>
+                <tr
+                    style="cursor:pointer"
+                    data-bs-toggle="modal"
+                    data-bs-target="#logModal"
+                    data-bs-old="{{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}"
+                    data-bs-new="{{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}"
+                >
                     <td class="text-center text-muted small">{{ $logger->userid }}</td>
                     <td class="text-center text-muted small">{{ $logger->type ?? '---' }}</td>
-                    <td class="text-center text-muted small">{{ $logger->model ?? '---'}}</td>
-
-                    <td>
-                        <div class="text-truncate" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;"
-                             title="{{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}"
-                             data-bs-toggle="modal" data-bs-target="#logModal" data-bs-content="{{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}">
-                            {{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}
-                        </div>
+                    <td class="text-center text-muted small">{{ $logger->model ?? '---' }}</td>
+                    <td class="text-truncate" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}
                     </td>
-
-                    <td>
-                        <div class="text-truncate" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;"
-                             title="{{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}"
-                             data-bs-toggle="modal" data-bs-target="#logModal" data-bs-content="{{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}">
-                            {{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}
-                        </div>
+                    <td class="text-truncate" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}
                     </td>
-
                     <td class="text-center text-muted small">{{ $logger->created_at }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center text-muted">没有日志记录</td>
+                    <td colspan="6" class="text-center text-muted">没有日志记录</td>
                 </tr>
             @endforelse
             </tbody>
@@ -108,14 +103,22 @@
 
 <!-- Modal -->
 <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1200px;">
+        <div class="modal-content" style="height: 600px;">
             <div class="modal-header">
-                <h5 class="modal-title" id="logModalLabel">日志详情</h5>
+                <h5 class="modal-title" id="logModalLabel">日志详情（旧值 VS 新值）</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
             </div>
-            <div class="modal-body">
-                <pre id="logContent" style="white-space: pre-wrap;"></pre>
+            <div class="modal-body" style="height: calc(100% - 58px);overflow-y: auto;overflow-x: hidden;padding: 16px;background-color: #f8f9fa;box-sizing: border-box;">
+                <div class="d-flex gap-3" style="width: 100%;box-sizing: border-box;background-color: #f8f9fa;padding: 4px;border-radius: 0.25rem;flex-wrap: nowrap;">
+                    <div style="width: 50%;background-color: #f8d7da;color: #721c24;padding: 12px;border: 1px solid #f5c6cb;border-radius: 0.5rem;box-sizing: border-box;overflow: visible;">
+                        <pre id="logOld" style="margin: 0;padding: 0;line-height: 1.4;font-size: 14px;white-space: pre-wrap;word-break: break-word;"></pre>
+                    </div>
+
+                    <div style="width: 50%;background-color: #d4edda;color: #155724;padding: 12px;border: 1px solid #c3e6cb;border-radius: 0.5rem;box-sizing: border-box;overflow: visible;">
+                        <pre id="logNew" style="margin: 0;padding: 0;line-height: 1.4;font-size: 14px;white-space: pre-wrap;word-break: break-word;"></pre>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -123,16 +126,26 @@
 
 @push('scripts')
     <script>
-        var logModal = document.getElementById('logModal');
+        const logModal = document.getElementById('logModal');
         logModal.addEventListener('show.bs.modal', function (event) {
-            var triggerDiv = event.relatedTarget;
-            var content = triggerDiv.getAttribute('data-bs-content') || '';
-            var modalBody = logModal.querySelector('#logContent');
+            const trigger = event.relatedTarget;
+            const oldContent = trigger.getAttribute('data-bs-old') || '{}';
+            const newContent = trigger.getAttribute('data-bs-new') || '{}';
+
+            const oldPre = logModal.querySelector('#logOld');
+            const newPre = logModal.querySelector('#logNew');
+
             try {
-                modalBody.textContent = JSON.stringify(JSON.parse(content), null, 2);
+                const parsedOld = JSON.parse(oldContent);
+                const parsedNew = JSON.parse(newContent);
+                oldPre.textContent = JSON.stringify(parsedOld, null, 2).trim();
+                newPre.textContent = JSON.stringify(parsedNew, null, 2).trim();
             } catch {
-                modalBody.textContent = content;
+                oldPre.textContent = oldContent.trim();
+                newPre.textContent = newContent.trim();
             }
         });
     </script>
 @endpush
+
+
