@@ -4,7 +4,7 @@ namespace Layman\LaravelLogger\Structs;
 class LoggerStruct
 {
     protected int $userid;
-    protected string $type;
+    protected ?string $type = null;
     protected ?string $model = null;
     protected array $old = [];
     protected array $new = [];
@@ -36,10 +36,10 @@ class LoggerStruct
     }
 
     /**
-     * @param string $type
+     * @param string|null $type
      * @return LoggerStruct
      */
-    public function setType(string $type): static
+    public function setType(?string $type): static
     {
         $this->type = $type;
         return $this;
