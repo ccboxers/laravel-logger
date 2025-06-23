@@ -69,20 +69,28 @@
             </thead>
             <tbody>
             @forelse ($loggers as $logger)
-                <tr
-                    style="cursor:pointer"
-                    data-bs-toggle="modal"
-                    data-bs-target="#logModal"
-                    data-bs-old="{{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}"
-                    data-bs-new="{{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}"
-                >
+                <tr>
                     <td class="text-center text-muted small">{{ $logger->userid }}</td>
                     <td class="text-center text-muted small">{{ $logger->type ?? '---' }}</td>
                     <td class="text-center text-muted small">{{ $logger->model ?? '---' }}</td>
-                    <td class="text-truncate" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <td
+                        class="text-truncate"
+                        style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#logModal"
+                        data-bs-old="{{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}"
+                        data-bs-new="{{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}"
+                    >
                         {{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}
                     </td>
-                    <td class="text-truncate" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <td
+                        class="text-truncate"
+                        style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#logModal"
+                        data-bs-old="{{ json_encode($logger->old, JSON_UNESCAPED_UNICODE) }}"
+                        data-bs-new="{{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}"
+                    >
                         {{ json_encode($logger->new, JSON_UNESCAPED_UNICODE) }}
                     </td>
                     <td class="text-center text-muted small">{{ $logger->created_at }}</td>
