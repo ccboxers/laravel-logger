@@ -1,47 +1,60 @@
+<style>
+    .form-inline-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-inline-group label {
+        white-space: nowrap;
+        margin-bottom: 0;
+    }
+
+</style>
 <div class="container-fluid py-4 px-5">
-    <form method="GET" action="{{ url()->current() }}" class="mb-4">
+    <form method="GET" action="{{ url()->current() }}" class="mb-4" autocomplete="off">
         <input type="hidden" name="directory" value="{{ request('directory') }}">
         <input type="hidden" name="filename" value="{{ request('filename') }}">
 
         <div class="container-fluid">
-            <div class="row g-3 align-items-center">
-
-                <div class="col-md-3 d-flex">
-                    <label for="userid" class="form-label me-2 mb-0" style="white-space: nowrap;">用户标识:</label>
+            <div class="row g-3">
+                <div class="col-md-4 form-inline-group">
+                    <label for="userid">用户标识:</label>
                     <input type="text" name="userid" id="userid" value="{{ request('userid') }}" class="form-control">
                 </div>
 
-                <div class="col-md-3 d-flex">
-                    <label for="model" class="form-label me-2 mb-0" style="white-space: nowrap;">数据模型:</label>
+                <div class="col-md-4 form-inline-group">
+                    <label for="model">数据模型:</label>
                     <input type="text" name="model" id="model" value="{{ request('model') }}" class="form-control">
                 </div>
 
-                <div class="col-md-3 d-flex">
-                    <label for="old" class="form-label me-2 mb-0" style="white-space: nowrap;">修改前:</label>
+                <div class="col-md-4 form-inline-group">
+                    <label for="old">修改前值:</label>
                     <input type="text" name="old" id="old" value="{{ request('old') }}" class="form-control">
                 </div>
 
-                <div class="col-md-3 d-flex">
-                    <label for="new" class="form-label me-2 mb-0" style="white-space: nowrap;">修改后:</label>
+                <div class="col-md-4 form-inline-group">
+                    <label for="new">修改后值:</label>
                     <input type="text" name="new" id="new" value="{{ request('new') }}" class="form-control">
                 </div>
 
-                <div class="col-md-3 d-flex">
-                    <label class="form-label me-2 mb-0" style="white-space: nowrap;">日期范围:</label>
+                <div class="col-md-4 form-inline-group">
+                    <label>日期范围:</label>
                     <div class="input-group">
                         <input type="date" name="created_ats" value="{{ request('created_ats') }}" class="form-control">
                         <span class="input-group-text">~</span>
                         <input type="date" name="created_ate" value="{{ request('created_ate') }}" class="form-control">
                     </div>
                 </div>
-
-                <div class="col-md-3 d-flex">
+                <div class="col-md-4 form-inline-group">
                     <button type="submit" class="btn btn-primary me-2">搜索</button>
                     <a href="{{ url()->current() }}?directory={{ request('directory') }}&filename={{ request('filename') }}" class="btn btn-secondary">重置</a>
                 </div>
+
             </div>
         </div>
     </form>
+
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle shadow-sm rounded bg-white" style="table-layout: fixed; width: 100%;">
             <thead class="table-light text-center">
